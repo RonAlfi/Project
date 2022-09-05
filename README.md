@@ -1,3 +1,4 @@
+---
 <h1 align="center">WorldWide Internet Prices </h1>
 <h3 align="center">Authors: Meir Nizri; Ron Alfi; Dean Dahan (Group: 18)</h3>
 <h5 align="center">Date: September 2022</h5>
@@ -400,8 +401,8 @@ internet_df[
 
 
 ```python
-internet_df['Avg price 2020'].replace("NO PACKAGES", '0', inplace=True)
-internet_df['Avg price 2021'].replace("NO PACKAGES", '0', inplace=True)
+internet_df['Avg price 2020'].replace("NO PACKAGES", None, inplace=True)
+internet_df['Avg price 2021'].replace("NO PACKAGES", None, inplace=True)
 ```
 
 Remove the comma from the last two features so we can convert them to numbers.
@@ -546,15 +547,15 @@ internet_df.info()
      4   Average Price         229 non-null    float64
      5   Lowest Price          229 non-null    float64
      6   Highest Price         229 non-null    float64
-     7   Avg price 2021        229 non-null    float64
-     8   Avg price 2020        229 non-null    float64
+     7   Avg price 2021        227 non-null    float64
+     8   Avg price 2020        226 non-null    float64
      9   Internet Users        203 non-null    float64
      10  Population            201 non-null    float64
      11  Avg speed             136 non-null    float64
      12  GDP capita            190 non-null    float64
      13  GDP growth            192 non-null    float64
      14  Internet Utilization  201 non-null    float64
-     15  Price Diff            229 non-null    float64
+     15  Price Diff            224 non-null    float64
     dtypes: float64(13), object(1), string(2)
     memory usage: 28.8+ KB
     
@@ -571,7 +572,24 @@ features = ['Internet Plans', 'Average Price', 'Lowest Price', 'Highest Price',
             'Avg price 2020', 'Avg price 2021', 'Price Diff', 'Internet Users', 
             'Population', 'Internet Utilization', 'GDP capita', 'GDP growth']
 melted_internet_df = pd.melt(internet_df[features], value_vars = features)
+print(melted_internet_df)
 ```
+
+                variable      value
+    0     Internet Plans  27.000000
+    1     Internet Plans  20.000000
+    2     Internet Plans  18.000000
+    3     Internet Plans  29.000000
+    4     Internet Plans  33.000000
+    ...              ...        ...
+    2743      GDP growth  -1.840968
+    2744      GDP growth   1.155038
+    2745      GDP growth        NaN
+    2746      GDP growth        NaN
+    2747      GDP growth  -8.079633
+    
+    [2748 rows x 2 columns]
+    
 
 
 ```python
@@ -607,7 +625,7 @@ plt.show()
 <a id='section2'></a>
 ### 2. Internet prices and usage precentage around the world
 
-Examine Which region of the world pays the most for internet and which region pays the least.
+Examine which region of the world pays the most for internet and which region pays the least.
 
 
 ```python
@@ -802,7 +820,7 @@ plt.title('The count of countries that raised/lowered prices')
     
 
 
-<b>Observation 4</b>: The number of countries that raised prices is much larger. This probably has something to do with the fact that in 2020 an epidemic broke out and the demand for the internet increased significantly.  
+<b>Observation 4</b>: The number of countries that lowered prices is much larger. This probably has something to do with the fact that in 2020 an epidemic broke out and the demand for the internet increased significantly.  
 
 Let's check if there is a connection to the growth of GDP per capita in 2020. First, We will subtract outliers to get a clearer figure.
 
@@ -869,7 +887,7 @@ prediction = lr_model.predict(X_test)
 print(f' MSE: {mean_absolute_error(y_test, prediction)}')
 ```
 
-     MSE: 3.1060390731961562
+     MSE: 4.963263909212016
     
 
 Integrate between features and weights and sort from high to low
